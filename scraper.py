@@ -98,8 +98,8 @@ def teamReport(team, event):
     sheet1.write(1,0,"Team Average Score: ")
     sheet1.write(1,1,(str(average) + "\n"))
 
-    rocket(team,event,sheet1)
-    
+    rocket(team, event, sheet1)
+
     wb.save("/Users/noahdouglas/Desktop/Team #"+str(team)+".xls")
 
 def teamMatches(team, event):
