@@ -31,11 +31,12 @@ def teamAverage(team, event):
     return round(mySum / count)
 
 
-def rocket(team, event, sheet):
+def rocket(team, event, sheet,column):
     lowerRocket = list()
     middleRocket = list()
     upperRocket = list()
     dictionary = tba.team_matches(team, event)
+    scoresList=[]
 
     for i in dictionary:
         breakDownBlue = i['score_breakdown']['blue']
@@ -71,38 +72,54 @@ def rocket(team, event, sheet):
             upperRocket.append(breakDownRed['topRightRocketNear'])
             upperRocket.append(breakDownRed['topRightRocketFar'])
 
-    sheet.write(2, 0, "Lower Rocket Panel Percentage: ")
-    sheet.write(2, 1, str(round((lowerRocket.count('Panel') / len(lowerRocket)) * 100)) + "%")
+    lowerRocketScore=((round((lowerRocket.count('Panel') / len(lowerRocket)) * 100))+(round((lowerRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))/2
+    middleRocketScore=((round((middleRocket.count('Panel') / len(lowerRocket)) * 100))+(round((middleRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))/2
+    upperRocketScore=((round((upperRocket.count('Panel') / len(lowerRocket)) * 100))+(round((upperRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))/2
+    rocketOVR=lowerRocketScore+(2*middleRocketScore)+(3 * upperRocketScore)
 
-    sheet.write(3, 0, "Lower Rocket Panel and Cargo Percentage: ")
-    sheet.write(3, 1, str(round((lowerRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)) + "%")
+    sheet.write(4, column, (round((lowerRocket.count('Panel') / len(lowerRocket)) * 100)))
+    sheet.write(5, column, (round((lowerRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))
+    sheet.write(6, column, (round((middleRocket.count('Panel') / len(lowerRocket)) * 100)))
+    sheet.write(7, column, (round((middleRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))
+    sheet.write(8, column, (round((upperRocket.count('Panel') / len(lowerRocket)) * 100)))
+    sheet.write(9, column, (round((upperRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))
+    sheet.write(10,column, (round(rocketOVR)))
 
-    sheet.write(4, 0, "Middle Rocket Panel Percentage: ")
-    sheet.write(4, 1, str(round((middleRocket.count('Panel') / len(lowerRocket)) * 100)) + "%")
+def teamReport(team, event,sheet,column):
+    average = teamAverage(team, event)
+    sheet.write(0, column, (str(team)))
+    sheet.write(1, column, (average))
+    sheet.write(2, column, average-(eventAverage(event)))
+    rocket(team, event, sheet, column)
 
-    sheet.write(5, 0, "Middle Rocket Panel and Cargo Percentage: ")
-    sheet.write(5, 1, str(round((middleRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)) + "%")
 
-    sheet.write(6, 0, "Upper Rocket Panel Percentage: ")
-    sheet.write(6, 1,  str(round((upperRocket.count('Panel') / len(lowerRocket)) * 100)) + "%")
-
-    sheet.write(7, 0, "Upper Rocket Panel and Cargo Percentage: " )
-    sheet.write(7, 1, str(round((upperRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)) + "%")
-
-def teamReport(team, event):
+def eventReport(event):
     wb=Workbook()
     sheet1=wb.add_sheet('sheet1')
-    average = teamAverage(team, event)
     sheet1.write(0, 0, "Team Number: ")
-    sheet1.write(0, 1, (str(team)))
-    sheet1.write(1,0,"Team Average Score: ")
-    sheet1.write(1,1,(str(average) + "\n"))
+    sheet1.write(1, 0, "Team Average Score: ")
+    sheet1.write(2, 0, "Points above/below Event Average:")
+    sheet1.write(4, 0, "Lower Rocket Panel Percentage: ")
+    sheet1.write(5, 0, "Lower Rocket Panel and Cargo Percentage: ")
+    sheet1.write(6, 0, "Middle Rocket Panel Percentage: ")
+    sheet1.write(7, 0, "Middle Rocket Panel and Cargo Percentage: ")
+    sheet1.write(8, 0, "Upper Rocket Panel Percentage: ")
+    sheet1.write(9, 0, "Upper Rocket Panel and Cargo Percentage: " )
+    sheet1.write(10,0, "OVR Rocket Rating:")
+    for i in range(1,len(event_teams(event))+1):
+        teamReport(event_teams(event)[i-1],event,sheet1,i)
 
-    rocket(team, event, sheet1)
+    wb.save(str(event)+".xls")
 
-    wb.save("Team #"+str(team)+".xls")
+def event_teams(event):
+    list = tba.event_teams(event)
+    myList=[]
 
-def teamMatches(team, event):
-    dictionary = tba.team_matches(team, event)
-    for i in dictionary:
-        print(i['score_breakdown']['blue'].keys())
+    for i in list:
+        teamKey=i.key
+        team=str(teamKey).replace("frc","")
+        number=int(team)
+        myList.append(number)
+    myList.sort()
+    return myList
+
