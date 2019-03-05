@@ -100,7 +100,7 @@ def teamReport(team, event):
 
     rocket(team, event, sheet1)
 
-    wb.save("/Users/noahdouglas/Desktop/Team #"+str(team)+".xls")
+    wb.save("Team #"+str(team)+".xls")
 
 def teamMatches(team, event):
     dictionary = tba.team_matches(team, event)
