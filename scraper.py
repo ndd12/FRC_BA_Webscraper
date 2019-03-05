@@ -1,42 +1,46 @@
 import tbapy
-import xlwt
 from xlwt import Workbook
 
 
 tba = tbapy.TBA('3WEGx9vYItqOFTwzOjip8LwmwQ4VpCJCfS0jlPdlqOP76XFkcEh3x66i2HzcRrq5')
 
-
+# Find the average score for an event
 def eventAverage(event):
     dictionary = tba.event_insights(event)
     return round(dictionary['qual']['average_score'])
 
-
+# Find the average winning score for an event
 def winScore(event):
     dictionary = tba.event_insights(event)
     return round(dictionary['qual']['average_win_score'])
 
-
+# calculate the average points a team scored at a given event
 def teamAverage(team, event):
-    myList = list()
+    # import information about the matches a team had at an event
     dictionary = tba.team_matches(team, event)
+    # variables for calculating averages
     mySum = 0
     count = 0
+    # for loop to iterate through a team's matches
     for i in dictionary:
+        # determine what alliance team was on in the match and use appropriate score in calculation
         if ('frc' + str(team)) in (i['alliances']['blue']['team_keys']):
             mySum += (i['alliances']['blue']['score'])
             count += 1
         else:
             mySum += (i['alliances']['red']['score'])
             count += 1
+    # calculate and return the average has a whole number
     return round(mySum / count)
 
 
 def rocket(team, event, sheet,column):
+    # 3 lists to hold the results of every match related to that specific part of the rocket
     lowerRocket = list()
     middleRocket = list()
     upperRocket = list()
+    # dictionary used to hold information about teams matches
     dictionary = tba.team_matches(team, event)
-    scoresList=[]
 
     for i in dictionary:
         breakDownBlue = i['score_breakdown']['blue']
@@ -94,8 +98,10 @@ def teamReport(team, event,sheet,column):
 
 
 def eventReport(event):
-    wb=Workbook()
-    sheet1=wb.add_sheet('sheet1')
+    # create new spreadsheet in project folder
+    wb = Workbook()
+    sheet1 = wb.add_sheet('sheet1')
+    # hard-code row names
     sheet1.write(0, 0, "Team Number: ")
     sheet1.write(1, 0, "Team Average Score: ")
     sheet1.write(2, 0, "Points above/below Event Average:")
@@ -106,11 +112,14 @@ def eventReport(event):
     sheet1.write(8, 0, "Upper Rocket Panel Percentage: ")
     sheet1.write(9, 0, "Upper Rocket Panel and Cargo Percentage: " )
     sheet1.write(10,0, "OVR Rocket Rating:")
+    # generate a new team report for every team at the given event
     for i in range(1,len(event_teams(event))+1):
         teamReport(event_teams(event)[i-1],event,sheet1,i)
 
+    # save the event report after all team reports have been calculated
     wb.save(str(event)+".xls")
 
+# return a sorted list of the team numbers competing at a given event
 def event_teams(event):
     list = tba.event_teams(event)
     myList=[]
