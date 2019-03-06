@@ -7,7 +7,7 @@
   <li>Download tbapy python library (using pip install)</li>
   <li>Generate a new token under account page on the blue alliance</li>
   <li>Replace tba variable in code with your token as a string</li>
-  <li>Call eventReport(event) function with parameter of a string 'event' where event is the code for a given FRC tournament (event codes are the end of a link to an event page on the blue alliance)</li>
+  <li>Call event_report(event) function with parameter of a string 'event' where event is the code for a given FRC tournament (event codes are the end of a link to an event page on the blue alliance)(event_report("2019cadm") is a working example)</li>
   <li>A new spreadsheet with basic statistics about all teams at the event will be created within the project folder</li>
 </ul>
 <h2>Changes to come:</h2>
