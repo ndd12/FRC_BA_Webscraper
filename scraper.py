@@ -1,8 +1,34 @@
-import tbapy
-from xlwt import Workbook
+# check if needed modules are installed
+try:
+    import tbapy
+except ImportError:
+    print('Error, Module tbapy is required')
 
+try:
+    import xlwt
+except ImportError:
+    print('Error, Module xlwt is required')
 
+# pass in key generated within blue alliance account
 tba = tbapy.TBA('3WEGx9vYItqOFTwzOjip8LwmwQ4VpCJCfS0jlPdlqOP76XFkcEh3x66i2HzcRrq5')
+
+# global styles used to write to spreadsheet
+styleBold = xlwt.XFStyle()
+bold = xlwt.Font()
+bold.bold = True
+bold.height = 240
+alignment = xlwt.Alignment()
+alignment.horz = xlwt.Alignment.HORZ_CENTER
+styleBold.alignment = alignment
+styleBold.font = bold
+
+style = xlwt.XFStyle()
+font = xlwt.Font()
+font.height = 240
+alignment = xlwt.Alignment()
+alignment.horz = xlwt.Alignment.HORZ_CENTER
+style.alignment = alignment
+style.font = font
 
 
 # Find the average score for an event
@@ -33,6 +59,17 @@ def team_average(team, event):
 
 # note: rocket() is called within team_report(), and not directly called within event_report()
 def rocket(team, event, sheet,column):
+    styleBold = xlwt.XFStyle()
+    bold = xlwt.Font()
+    bold.bold = True
+    bold.height = 240
+    styleBold.font = bold
+
+    style = xlwt.XFStyle()
+    font = xlwt.Font()
+    font.height = 240
+    style.font = font
+
     # 3 lists to hold the results of every match related to that specific part of the rocket
     lowerRocket = list()
     middleRocket = list()
@@ -84,13 +121,13 @@ def rocket(team, event, sheet,column):
     rocketOVR=lowerRocketScore+(2*middleRocketScore)+(3 * upperRocketScore)
 
     # once information has been calculated, write into the sheet for event_report
-    sheet.write(4, column, (round((lowerRocket.count('Panel') / len(lowerRocket)) * 100)))
-    sheet.write(5, column, (round((lowerRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))
-    sheet.write(6, column, (round((middleRocket.count('Panel') / len(lowerRocket)) * 100)))
-    sheet.write(7, column, (round((middleRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))
-    sheet.write(8, column, (round((upperRocket.count('Panel') / len(lowerRocket)) * 100)))
-    sheet.write(9, column, (round((upperRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)))
-    sheet.write(10,column, (round(rocketOVR)))
+    sheet.write(4, column, (round((lowerRocket.count('Panel') / len(lowerRocket)) * 100)), style)
+    sheet.write(5, column, (round((lowerRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)), style)
+    sheet.write(6, column, (round((middleRocket.count('Panel') / len(lowerRocket)) * 100)), style)
+    sheet.write(7, column, (round((middleRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)), style)
+    sheet.write(8, column, (round((upperRocket.count('Panel') / len(lowerRocket)) * 100)), style)
+    sheet.write(9, column, (round((upperRocket.count('PanelAndCargo') / len(lowerRocket)) * 100)), style)
+    sheet.write(10,column, (round(rocketOVR)), style)
 
 
 # return a sorted list of the team numbers competing at a given event
@@ -109,27 +146,28 @@ def event_teams(event):
 # write the information for given team into the event report
 def team_report(team, event, sheet, column):
     average = team_average(team, event)
-    sheet.write(0, column, (str(team)))
-    sheet.write(1, column, average)
-    sheet.write(2, column, average-(event_average(event)))
+    sheet.write(0, column, (str(team)), styleBold)
+    sheet.write(1, column, average, style)
+    sheet.write(2, column, average-(event_average(event)), style)
     rocket(team, event, sheet, column)
 
 
 def event_report(event):
+
     # create new spreadsheet in project folder
-    wb = Workbook()
+    wb = xlwt.Workbook()
     sheet1 = wb.add_sheet('sheet1')
     # hard-code row names
-    sheet1.write(0, 0, "Team Number: ")
-    sheet1.write(1, 0, "Team Average Score: ")
-    sheet1.write(2, 0, "Points above/below Event Average:")
-    sheet1.write(4, 0, "Lower Rocket Panel Percentage: ")
-    sheet1.write(5, 0, "Lower Rocket Panel and Cargo Percentage: ")
-    sheet1.write(6, 0, "Middle Rocket Panel Percentage: ")
-    sheet1.write(7, 0, "Middle Rocket Panel and Cargo Percentage: ")
-    sheet1.write(8, 0, "Upper Rocket Panel Percentage: ")
-    sheet1.write(9, 0, "Upper Rocket Panel and Cargo Percentage: " )
-    sheet1.write(10, 0, "OVR Rocket Rating:")
+    sheet1.write(0, 0, "Team Number: ", styleBold)
+    sheet1.write(1, 0, "Team Average Score: ", styleBold)
+    sheet1.write(2, 0, "Points above/below Event Average:", styleBold)
+    sheet1.write(4, 0, "Lower Rocket Panel Percentage: ", styleBold)
+    sheet1.write(5, 0, "Lower Rocket Panel and Cargo Percentage: ", styleBold)
+    sheet1.write(6, 0, "Middle Rocket Panel Percentage: ", styleBold)
+    sheet1.write(7, 0, "Middle Rocket Panel and Cargo Percentage: ", styleBold)
+    sheet1.write(8, 0, "Upper Rocket Panel Percentage: ", styleBold)
+    sheet1.write(9, 0, "Upper Rocket Panel and Cargo Percentage: ", styleBold)
+    sheet1.write(10, 0, "OVR Rocket Rating:", styleBold)
 
     # generate a new team report for every team at the given event
     for i in range(1, len(event_teams(event))+1):
