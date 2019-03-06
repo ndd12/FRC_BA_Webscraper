@@ -2,7 +2,7 @@
 <h3>This project utilizes the tbapy python library developed by FRC team 1418</h3>
 <h2>How to Use Project in Current State:</h2>
 <ul>
-  <li>Ensure Microsoft Excel is installed</li>
+  <li>Ensure Microsoft Excel is installed(functionality not yet tested with LibreOffice, but may still work)</li>
   <li>Download xlwt python library (using pip install)</li>
   <li>Download tbapy python library (using pip install)</li>
   <li>Generate a new token under account page on the blue alliance</li>
