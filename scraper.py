@@ -25,8 +25,6 @@ styleBold.font = bold
 style = xlwt.XFStyle()
 font = xlwt.Font()
 font.height = 240
-alignment = xlwt.Alignment()
-alignment.horz = xlwt.Alignment.HORZ_CENTER
 style.alignment = alignment
 style.font = font
 
@@ -157,6 +155,11 @@ def event_report(event):
     # create new spreadsheet in project folder
     wb = xlwt.Workbook()
     sheet1 = wb.add_sheet('sheet1')
+    first_col=sheet1.col(0)
+    first_col.width = 256*45
+    sheet1.set_panes_frozen(True)
+    sheet1.set_horz_split_pos(1)
+    sheet1.set_vert_split_pos(1)
     # hard-code row names
     sheet1.write(0, 0, "Team Number: ", styleBold)
     sheet1.write(1, 0, "Team Average Score: ", styleBold)
