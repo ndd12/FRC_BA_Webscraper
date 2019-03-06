@@ -3,6 +3,7 @@
 <h2>How to Use Project in Current State:</h2>
 <ul>
   <li>Ensure Microsoft Excel is installed</li>
+  <li>Download xlwt python library (using pip install)</li>
   <li>Download tbapy python library (using pip install)</li>
   <li>Generate a new token under account page on the blue alliance</li>
   <li>Replace tba variable in code with your token as a string</li>
