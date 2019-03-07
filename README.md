@@ -1,4 +1,5 @@
 # FRC Python Scout
+<h1>Current Version: 0.7
 <h3>This project utilizes the tbapy python library developed by FRC team 1418</h3>
 <h2>Unless you are intentionally modifying or adding new features, you will only need to call event_report() function to generate a spreadsheet</h2>
 <h2>Sample call to function:  event_report("2019cadm")  (Pulls information about the Del Mar weeek one regional tournament</h2>
@@ -16,3 +17,4 @@
 <ul>
     <li>Add pre-scouting capability to search through all teams at a given event and get all history at other events for the current season</li>
 </ul>
+<h1>If you are testing the software please leave issue reports filed under either "bug fix" or "feature testing" to help with development!</h1>
