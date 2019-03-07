@@ -182,18 +182,24 @@ def event_report(event):
     # save the event report after all team reports have been calculated
     wb.save(str(event)+".xls")
 
+
 # given a team and an event, find how robot finished in respect to HAB zones for every match
-def end_game_location(team, event,sheet,column):
+def end_game_location(team, event, sheet, column):
+    # a list to hold all of the final locations
     location = []
+    # iterate through every match the team has at the given event
     for i in tba.team_matches(team, event):
+        # If the team is on the red alliance, look at the score breakdown for the red alliane or blue otherwise
         if ('frc' + str(team)) in (i['alliances']['red']['team_keys']):
             teams=i['alliances']['red']['team_keys']
+            # determine if robot is robot 1 , 2, or 3 in the given match and record the corresponding value from the api
             if ("frc"+str(team)) == teams[0]:
                 location.append(i['score_breakdown']['red']['endgameRobot1'])
             elif ("frc"+str(team)) == teams[1]:
                 location.append(i['score_breakdown']['red']['endgameRobot2'])
             elif ("frc"+str(team)) == teams[2]:
                 location.append(i['score_breakdown']['red']['endgameRobot3'])
+
         elif ('frc' + str(team)) in (i['alliances']['blue']['team_keys']):
             teams = i['alliances']['blue']['team_keys']
             if ("frc"+str(team)) == teams[0]:
@@ -202,13 +208,16 @@ def end_game_location(team, event,sheet,column):
                 location.append(i['score_breakdown']['blue']['endgameRobot2'])
             elif ("frc"+str(team)) == teams[2]:
                 location.append(i['score_breakdown']['blue']['endgameRobot3'])
+    # Get values for what percent of the matches teams robot is in the different positions of the HAB Zone
     levelOnePercentage = (location.count("HabLevel1")/len(location)) * 100
     levelTwoPercentage = (location.count("HabLevel2")/len(location)) * 100
     levelThreePercentage = (location.count("HabLevel3")/len(location)) * 100
 
+    # write values that were just calculated to the sheet used in the function call
     sheet.write(12, column, round(levelOnePercentage), style)
     sheet.write(13, column, round(levelTwoPercentage), style)
     sheet.write(14, column, round(levelThreePercentage), style)
+
 
 def insights(team, event):
     for i in tba.team_matches(8, "2019cadm"):
