@@ -1,5 +1,7 @@
 # FRC Python Scout
 <h3>This project utilizes the tbapy python library developed by FRC team 1418</h3>
+<h2>Unless you are intentionally modifying or adding new features, you will only need to call event_report() function to generate a spreadsheet</h2>
+<h2>Sample call to function:  event_report("2019cadm")  (Pulls information about the Del Mar weeek one regional tournament</h2>
 <h2>How to Use Project in Current State:</h2>
 <ul>
   <li>Ensure Microsoft Excel is installed(functionality not yet tested with LibreOffice, but may still work)</li>
